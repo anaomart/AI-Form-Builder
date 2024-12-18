@@ -53,7 +53,7 @@ interface StatsCardProps {
   data?: Awaited<ReturnType<typeof GetFormStats>>;
   loading: boolean;
 }
-function SatesCards(props: StatsCardProps) {
+export function SatesCards(props: StatsCardProps) {
   const { data, loading } = props;
   const cards = [
     {
@@ -116,7 +116,7 @@ interface SatesCardProps {
   helperText: string;
   className?: string;
 }
-function SatesCard(props: SatesCardProps) {
+export function SatesCard(props: SatesCardProps) {
   const { title, value, icon, loading, helperText, className } = props;
   return (
     <Card className={className}>
@@ -186,7 +186,7 @@ function FormCard({ form }: { form: Form }) {
           <CardFooter className="flex items-center justify-between text-muted-foreground text-sm">
           {form.published && (
             <Button >
-              <Link href={`/form/${form.id}`}>View Form</Link>
+              <Link href={`/forms/${form.id}`}>View Form</Link>
               View Submissions <BiRightArrowAlt />
             </Button>
           )}

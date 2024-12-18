@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Logo from "@/components/Logo";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import DesignerContextProvider from "@/components/context/DesignerContext";
+import NextTopLoader from "nextjs-toploader";
 export const metadata: Metadata = {
   title: "AI Form Builder",
   description: "AI Form Builder By Omar Ashraf",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             
           </header>
           <main>
+            <NextTopLoader color="#e11d48"/>
          <DesignerContextProvider>
          <ThemeProvider
             attribute="class"

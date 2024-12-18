@@ -24,12 +24,19 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-const type: ElementsType = "TextField";
+import { BsFillCalendar2DateFill } from "react-icons/bs";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent } from "@/components/ui/popover";
+import { PopoverTrigger } from "@radix-ui/react-popover";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+const type: ElementsType = "DateField";
 const extraAttributes = {
-  label: "Text Field",
-  helperText: "Text Field",
+  label: "Date Field",
+  helperText: "Date Field",
   required: false,
-  placeHolder: "Text Field",
+  placeHolder: "Pick a date",
 };
 const propertiesSchema = z.object({
   label: z.string().max(50),
@@ -37,7 +44,7 @@ const propertiesSchema = z.object({
   placeHolder: z.string().max(50),
   helperText: z.string().max(200),
 });
-export const TextFieldFormElement: FormElement = {
+export const DateFieldFormElement: FormElement = {
   type,
   construct: (id) => {
     return {
@@ -47,8 +54,8 @@ export const TextFieldFormElement: FormElement = {
     };
   },
   designerBtnElement: {
-    icon: MdTextFields,
-    label: "Text Field",
+    icon: BsFillCalendar2DateFill,
+    label: "DateField",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -79,7 +86,13 @@ function DesignerComponent({
         {label}
         {required && "*"}
       </Label>
-      <Input readOnly disabled placeholder={placeHolder} />
+      <Button
+        variant="outline"
+        className="w-full justify-start text-left font-normal"
+      >
+        <CalendarIcon className="mr-2 h-4 w-4" />
+        <span>Pick Date</span>
+      </Button>
       {helperText && (
         <span className="text-xs text-muted-foreground">{helperText}</span>
       )}
@@ -104,7 +117,9 @@ function FormComponent({
   const element = elementInstance as CustomInstance;
   const { label, required, placeHolder, helperText } = element.extraAttributes;
   const [error, setError] = useState(false);
-  const [value, setValue] = useState(formValue || "");
+  const [date, setDate] = useState<Date | undefined>(
+    formValue ? new Date(formValue) : undefined
+  );
   console.log({ formValue });
 
   useEffect(() => {
@@ -117,22 +132,42 @@ function FormComponent({
         {label}
         {required && "*"}
       </Label>
-      <Input
-        value={value}
-        className={error ? "border-red-500" : ""}
-        placeholder={placeHolder}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        onBlur={(e) => {
-          if (!submitValue) return;
-          submitValue(element.id, e.target.value);
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+              error && "border-red-500"
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? format(date, "PPP") : <span>Pick Date</span>}
+          </Button>
+        </PopoverTrigger>
 
-          const valid = TextFieldFormElement.validate(element, e.target.value);
-          setError(!valid);
-          if (!valid) return;
-        }}
-      />
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(date) => {
+              console.log({ date });
+              setDate(date);
+
+              if (!submitValue) return;
+
+              const value = date?.toUTCString() || "";
+              const valid = DateFieldFormElement.validate(element, value);
+
+              setError(!valid);
+
+              submitValue(element.id, value);
+            }}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
       {helperText && (
         <span
           className={cn(
@@ -169,13 +204,12 @@ function PropertiesComponent({
 
   // },[element,form])
   function applyChanges(values: PropertiesFormSchemaType) {
-    const { label, required, placeHolder, helperText } = values;
+    const { label, required, helperText } = values;
     updateElement(element.id, {
       ...elementInstance,
       extraAttributes: {
         label,
         required,
-        placeHolder,
         helperText,
       },
     });
@@ -226,33 +260,15 @@ function PropertiesComponent({
                   {...field}
                 />
               </FormControl>
-              <FormDescription>The helper text of the field.
-              It will be displayed below the field.</FormDescription>
+              <FormDescription>
+                The helper text of the field. It will be displayed below the
+                field.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="placeHolder"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>PlaceHolder</FormLabel>
-              <FormControl>
-                <Input
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.currentTarget.blur();
-                    }
-                  }}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>Placeholder of the filed</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="required"
@@ -260,7 +276,6 @@ function PropertiesComponent({
             <FormItem className="flex items-center justify-between rounded-lg border p-3 shadow-sm ">
               <div className="space-y-0.5">
                 <FormLabel>Required</FormLabel>
-
               </div>
               <FormControl>
                 <Switch

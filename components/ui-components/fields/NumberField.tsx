@@ -24,12 +24,13 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-const type: ElementsType = "TextField";
+import { Bs123 } from "react-icons/bs";
+const type: ElementsType = "NumberField";
 const extraAttributes = {
-  label: "Text Field",
-  helperText: "Text Field",
+  label: "NumberField Field",
+  helperText: "Helper Field",
   required: false,
-  placeHolder: "Text Field",
+  placeHolder: "0",
 };
 const propertiesSchema = z.object({
   label: z.string().max(50),
@@ -37,7 +38,7 @@ const propertiesSchema = z.object({
   placeHolder: z.string().max(50),
   helperText: z.string().max(200),
 });
-export const TextFieldFormElement: FormElement = {
+export const NumberFieldFormElement: FormElement = {
   type,
   construct: (id) => {
     return {
@@ -47,8 +48,8 @@ export const TextFieldFormElement: FormElement = {
     };
   },
   designerBtnElement: {
-    icon: MdTextFields,
-    label: "Text Field",
+    icon: Bs123,
+    label: "Number Field",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -79,7 +80,7 @@ function DesignerComponent({
         {label}
         {required && "*"}
       </Label>
-      <Input readOnly disabled placeholder={placeHolder} />
+      <Input type="number" readOnly disabled placeholder={placeHolder} />
       {helperText && (
         <span className="text-xs text-muted-foreground">{helperText}</span>
       )}
@@ -121,6 +122,7 @@ function FormComponent({
         value={value}
         className={error ? "border-red-500" : ""}
         placeholder={placeHolder}
+        type="number"
         onChange={(e) => {
           setValue(e.target.value);
         }}
@@ -128,7 +130,7 @@ function FormComponent({
           if (!submitValue) return;
           submitValue(element.id, e.target.value);
 
-          const valid = TextFieldFormElement.validate(element, e.target.value);
+          const valid = NumberFieldFormElement.validate(element, e.target.value);
           setError(!valid);
           if (!valid) return;
         }}
