@@ -23,7 +23,7 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import Confetti from "react-confetti";
 
 export default function FormBuilder({ form }: { form: Form }) {
-  const { setElements } = useDesigner();
+  const { setElements ,setSelectedElement} = useDesigner();
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },
@@ -36,8 +36,9 @@ export default function FormBuilder({ form }: { form: Form }) {
     if (!isReady) return;
     const elements = JSON.parse(form.content);
     setElements(elements);
+    setSelectedElement(null)
     setIsReady(true);
-  }, [form, setElements, isReady]);
+  }, [form, setElements, isReady ,setSelectedElement]);
 
   const sensors = useSensors(mouseSensor, touchSensor);
   const shareUrl = `${window.location.origin}/submit/${form.shareURL}`;

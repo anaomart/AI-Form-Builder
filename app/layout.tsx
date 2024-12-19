@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, RedirectToSignIn, UserButton } from '@clerk/nextjs'
 import './globals.css'
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             
           </header>
           <main>
+
             <NextTopLoader color="#e11d48"/>
          <DesignerContextProvider>
          <ThemeProvider
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             enableSystem
             disableTransitionOnChange
           >
+            
             <nav className="flex items-center justify-between border-b border-border h-[60px] px-4 py-2">
         <Logo />
      <div className="flex gap-4 items-center">

@@ -185,9 +185,13 @@ function FormCard({ form }: { form: Form }) {
       <CardContent>{form.description || "No description"}</CardContent>
           <CardFooter className="flex items-center justify-between text-muted-foreground text-sm">
           {form.published && (
-            <Button >
-              <Link href={`/forms/${form.id}`}>View Form</Link>
-              View Submissions <BiRightArrowAlt />
+            <Button className="" >
+              <Link className="w-full flex items-center justify-between" href={`/forms/${form.id}`}>
+              
+              View Form Submissions
+              
+              <BiRightArrowAlt />
+              </Link>
             </Button>
           )}
           {!form.published && (

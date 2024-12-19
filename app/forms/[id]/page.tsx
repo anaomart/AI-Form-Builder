@@ -3,8 +3,10 @@ import { SatesCard } from "@/app/(dashboard)/page";
 import { ElementsType, FormElementInstance } from "@/components/ui-components/FormElements";
 import FormLinkShare from "@/components/ui-components/FormLinkShare";
 import VisitBtn from "@/components/ui-components/VisitBtn";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDistance } from "date-fns";
+import { format, formatDistance } from "date-fns";
 import { ElementType, ReactNode } from "react";
 import { FaWpforms } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
@@ -127,8 +129,14 @@ async function SubmissionsTable({id}:{id:number}) {
   FormElements.forEach(ele =>{
     switch (ele.type){
       case "TextField":
+        case "TextAreaField":
+          case "CheckboxField":
+        case "DateField":
+        case "NumberField":
+        case "SelectField":
         columns.push({id:ele.id, label:ele.extraAttributes?.label, required:ele.extraAttributes?.required, type:ele.type})
         break;
+
       default:
         break
     }
@@ -181,8 +189,17 @@ async function SubmissionsTable({id}:{id:number}) {
 }
 
 function RowCell({ type, value }: { type: ElementsType, value: string }) {
-  const node:ReactNode = value
-
+  let node:ReactNode = value
+  switch (type) {
+    case 'DateField':
+      if(!value) break;
+      const date = new Date(value)
+      node = <Badge variant={'outline'}>{format(date ,'dd/MM/yyyy')}</Badge>
+      break;
+    case 'CheckboxField':
+      const checkboxValue = value ==='true'
+      node = <Checkbox checked={checkboxValue} disabled/>
+  }
   return <TableCell>{node}</TableCell>
 
 

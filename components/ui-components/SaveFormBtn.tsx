@@ -24,7 +24,7 @@ export default function SaveFormBtn({id}:{id:number}) {
      })   }}  
 
   return (
-    <Button variant={"outline"}
+    <Button id='save' variant={"outline"}
     onClick={()=> startTransition(updateFormContact)}
     className='gap-2'>
 
