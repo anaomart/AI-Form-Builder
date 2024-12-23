@@ -33,7 +33,8 @@ export default function FormBuilder({ form }: { form: Form }) {
   });
 
   useEffect(() => {
-    if (!isReady) return;
+    // if (!isReady) return;
+    console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
     setSelectedElement(null)
