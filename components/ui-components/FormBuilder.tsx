@@ -26,7 +26,7 @@ export default function FormBuilder({ form }: { form: Form }) {
   const { setElements ,setSelectedElement} = useDesigner();
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: { distance: 15 },
+    activationConstraint: { distance: 15 },   
   });
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { tolerance: 5, delay: 380 },
