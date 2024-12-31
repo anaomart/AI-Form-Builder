@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,16 +14,80 @@ import { toast } from '@/hooks/use-toast';
 import { formSchema, formSchemeType } from '@/schemas/form';
 import { CreateForm } from '@/actions/forms';
 import { useRouter } from 'next/navigation';
+import { Switch } from '../ui/switch';
+import useAiQuestions from '../hooks/useAIQustions';
 
 export default function CreateFormBtn() {
     const router = useRouter();
+    const [usingAI , setUsingAI] = useState(false);
     const form = useForm<formSchemeType>({
         resolver: zodResolver(formSchema)
     })
-
+        const {setQuestionsResponse} = useAiQuestions()
+    
    async function onSubmit(values :formSchemeType){
         console.log(values)
-
+        if(usingAI){
+            setQuestionsResponse([
+                {
+                    "id": "2297",
+                    "type": "TitleField",
+                    "extraAttributes": {
+                        "title": "Title Field"
+                    }
+                },
+                {
+                    "id": "4651",
+                    "type": "SubTitleField",
+                    "extraAttributes": {
+                        "label": "Text Field",
+                        "helperText": "Text Field",
+                        "required": false,
+                        "placeHolder": "Text Field"
+                    }
+                },
+                {
+                    "id": "6996",
+                    "type": "TextField",
+                    "extraAttributes": {
+                        "label": "Text Field",
+                        "helperText": "Text Field",
+                        "required": false,
+                        "placeHolder": "Text Field"
+                    }
+                },
+                {
+                    "id": "123",
+                    "type": "NumberField",
+                    "extraAttributes": {
+                        "label": "NumberField Field",
+                        "helperText": "Helper Field",
+                        "required": false,
+                        "placeHolder": "0"
+                    }
+                },
+                {
+                    "id": "5060",
+                    "type": "DateField",
+                    "extraAttributes": {
+                        "label": "Date Field",
+                        "helperText": "Date Field",
+                        "required": false,
+                        "placeHolder": "Pick a date"
+                    }
+                },
+                {
+                    "id": "8575",
+                    "type": "TextAreaField",
+                    "extraAttributes": {
+                        "label": "TextArea Field",
+                        "helperText": "TextArea Field",
+                        "required": false,
+                        "placeHolder": "TextArea Field",
+                        "rows": 3
+                    }
+                }
+            ])        }
         try {
             // Simulate a request to create a form
           const formId=  await CreateForm(values)
@@ -99,6 +163,11 @@ export default function CreateFormBtn() {
                 </FormItem>
             )}
             />
+           <div className='flex gap-2 my-2 justify-between hover:text-white'>
+            <span className='text-muted-foreground text-sm '>Generate questions with AI</span>
+             <Switch onCheckedChange={(e)=>{
+                setUsingAI(e)
+             }}/></div>
             
         </form>
         </Form>

@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { LuHeading1 } from "react-icons/lu";
 const type: ElementsType = "TitleField";
 const extraAttributes = {
-  title: "Text Field",
+  title: "Title Field",
   
 };
 const propertiesSchema = z.object({

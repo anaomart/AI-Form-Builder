@@ -7,6 +7,7 @@ import Logo from "@/components/Logo";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import DesignerContextProvider from "@/components/context/DesignerContext";
 import NextTopLoader from "nextjs-toploader";
+import AIContextProvider, { AIContext } from "@/components/context/AiContext";
 export const metadata: Metadata = {
   title: "AI Form Builder",
   description: "AI Form Builder By Omar Ashraf",
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>
 
             <NextTopLoader color="#e11d48"/>
+            <AIContextProvider>
          <DesignerContextProvider>
          <ThemeProvider
             attribute="class"
@@ -42,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             </ThemeProvider>
          </DesignerContextProvider>
+         </AIContextProvider>
             </main>
         </body>
       </html>

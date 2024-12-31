@@ -21,22 +21,161 @@ import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import Confetti from "react-confetti";
+import { FormElementInstance } from "./FormElements";
+import useAiQuestions from "../hooks/useAIQustions";
 
 export default function FormBuilder({ form }: { form: Form }) {
-  const { setElements ,setSelectedElement} = useDesigner();
+  const { setElements ,setSelectedElement, elements, addElement } = useDesigner();
+  const {questionsResponse} = useAiQuestions()
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },   
   });
+
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { tolerance: 5, delay: 380 },
   });
+  const list : FormElementInstance[] = [
+    {
+      "id": "1",
+      "type": "TitleField",
+      "extraAttributes": {
+        "title": "Roof Assessment Form"
+      }
+    },
+    {
+      "id": "2",
+      "type": "SubTitleField",
+      "extraAttributes": {
+        "title": "Property Information"
+      }
+    },
+    {
+      "id": "3",
+      "type": "TextField",
+      "extraAttributes": {
+        "label": "Address",
+        "helperText": "Enter the full address of the property",
+        "required": true,
+        "placeHolder": "123 Main Street, Anytown"
+      }
+    },
+    {
+      "id": "4",
+      "type": "NumberField",
+      "extraAttributes": {
+        "label": "Age of Roof",
+        "helperText": "Approximately how old is your current roof?",
+        "required": true,
+        "placeHolder": "e.g., 10"
+      }
+    },
+      {
+      "id": "5",
+      "type": "SelectField",
+      "extraAttributes": {
+        "label": "Roof Type",
+        "helperText": "What type of roof do you have?",
+        "required": true,
+          "placeHolder": "Select Roof Type",
+        "options": ["Asphalt Shingles", "Tile", "Metal", "Slate", "Wood", "Other"]
+      }
+    },
+    {
+      "id": "6",
+      "type": "TextAreaField",
+      "extraAttributes": {
+        "label": "Describe any existing roof problems",
+        "helperText": "Leaks, missing shingles, etc.",
+        "required": false,
+        "placeHolder": "e.g., Leaks in the living room, missing shingles on the north side",
+        "rows": 3
+      }
+    },  {
+      "id": "7",
+      "type": "CheckboxField",
+      "extraAttributes": {
+        "label": "Have you noticed any leaks?",
+        "helperText": "",
+        "required": true
+      }
+    },
+    {
+      "id": "8",
+      "type": "CheckboxField",
+      "extraAttributes": {
+        "label": "Are there any missing or damaged shingles?",
+        "helperText": "",
+        "required": true
+      }
+    },
+   {
+      "id": "9",
+      "type": "CheckboxField",
+      "extraAttributes": {
+        "label": "Are you interested in energy-efficient roofing options?",
+        "helperText": "",
+        "required": false
+      }
+    },
+    {
+      "id": "10",
+      "type": "SubTitleField",
+      "extraAttributes": {
+        "label": "Contact Information"
+      }
+    },
+    {
+      "id": "11",
+      "type": "TextField",
+      "extraAttributes": {
+        "label": "Name",
+        "helperText": "Your full name",
+        "required": true,
+        "placeHolder": "e.g., John Doe"
+      }
+    },
+      {
+      "id": "12",
+      "type": "TextField",
+      "extraAttributes": {
+        "label": "Phone Number",
+        "helperText": "e.g., 555-123-4567",
+        "required": true,
+        "placeHolder": "e.g., 555-123-4567"
+      }
+    },
+    {
+      "id": "13",
+      "type": "TextField",
+      "extraAttributes": {
+        "label": "Email Address",
+        "helperText": "e.g., johndoe@email.com",
+        "required": true,
+        "placeHolder": "e.g., johndoe@email.com"
+      }
+    },
+    {
+      "id": "14",
+      "type": "DateField",
+      "extraAttributes": {
+        "label": "Best Time to Contact",
+        "helperText": "Select the best date and time to contact you",
+        "required": true,
+        "placeHolder": "Select Date and Time"
+      }
+    }
+  ]
 
   useEffect(() => {
     // if (!isReady) return;
     console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
+    questionsResponse.reverse().forEach(element => {
+      addElement(elements.length, element)
+    });
+
     setSelectedElement(null)
     setIsReady(true);
   }, [form, setElements, isReady ,setSelectedElement]);

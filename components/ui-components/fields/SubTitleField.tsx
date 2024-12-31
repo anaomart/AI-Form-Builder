@@ -24,10 +24,8 @@ import {
 import { LuHeading2 } from "react-icons/lu";
 const type: ElementsType = "SubTitleField";
 const extraAttributes = {
-  label: "Text Field",
-  helperText: "Text Field",
-  required: false,
-  placeHolder: "Text Field",
+  title: "Title Field",
+  
 };
 const propertiesSchema = z.object({
   title: z.string().max(50),
