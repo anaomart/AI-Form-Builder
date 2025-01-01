@@ -1,11 +1,13 @@
+'use server'
 import {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
-
-export const GenerateQuestions= ()=>{
-    const apiKey = process.env.GEMINI_API_KEY || "";
+const apiKey = process.env.GEMINI_API_KEY || "";
+    console.log({apiKey})
+export const GenerateQuestions= async (prompt:string)=>{
+    
     const genAI = new GoogleGenerativeAI(apiKey);
     
     const model = genAI.getGenerativeModel({
@@ -19,7 +21,7 @@ export const GenerateQuestions= ()=>{
       topP: 0.95,
       topK: 40,
       maxOutputTokens: 8192,
-      responseMimeType: "text/plain",
+      responseMimeType: "application/json",
     };
     
     async function run() {
@@ -28,10 +30,7 @@ export const GenerateQuestions= ()=>{
         history: [],
       });
     
-      const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-      console.log("AI");
-      console.log(result.response.text());
-      console.log("AI");
+      const result = await chatSession.sendMessage(prompt);
       return result.response.text();
     }
     console.log("Run")

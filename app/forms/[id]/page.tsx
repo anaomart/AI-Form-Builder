@@ -69,17 +69,17 @@ export default async function FormDetails({
   return (
     <>
       <div className="p-10 border-b w-full flex flex-col border-muted">
-        <div className="flex justify-between container">
+        <div className="flex justify-between ">
           <h1 className="text-4xl font-bold truncate">{form.name}</h1>
           <VisitBtn shareURL={form.shareURL} />
         </div>
         <div className="py-4 border-b border-muted">
-          <div className="container flex gap-2 items-center justify-center">
+          <div className=" flex gap-2 items-center justify-center">
             <FormLinkShare shareURL={form.shareURL}/>
           </div>
         </div>
 
-        <div className="w-full pt-8 gap-4  container">
+        <div className="w-full pt-8 gap-4  ">
         <div className="min-w-max  pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
           <SatesCard
@@ -94,7 +94,7 @@ export default async function FormDetails({
         ))}
       </div>
         </div>
-        <div className="container pt-10">
+        <div className=" pt-10">
           <SubmissionsTable  id={form.id}/>
         </div>
       </div>

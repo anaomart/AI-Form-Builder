@@ -8,6 +8,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import DesignerContextProvider from "@/components/context/DesignerContext";
 import NextTopLoader from "nextjs-toploader";
 import AIContextProvider, { AIContext } from "@/components/context/AiContext";
+import ResetOnRouteChange from "@/lib/UrlChange";
 export const metadata: Metadata = {
   title: "AI Form Builder",
   description: "AI Form Builder By Omar Ashraf",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
+            <AIContextProvider>
       <html lang="en" suppressHydrationWarning>
         <body>
           <header>
@@ -23,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>
 
             <NextTopLoader color="#e11d48"/>
-            <AIContextProvider>
          <DesignerContextProvider>
          <ThemeProvider
             attribute="class"
@@ -41,13 +42,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </nav>
             {children}
             <Toaster/>
+            <ResetOnRouteChange />
 
             </ThemeProvider>
          </DesignerContextProvider>
-         </AIContextProvider>
             </main>
         </body>
       </html>
+         </AIContextProvider>
     </ClerkProvider>
   )
 }

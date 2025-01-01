@@ -26,12 +26,12 @@ import useAiQuestions from "../hooks/useAIQustions";
 
 export default function FormBuilder({ form }: { form: Form }) {
   const { setElements ,setSelectedElement, elements, addElement } = useDesigner();
-  const {questionsResponse} = useAiQuestions()
+  const {questionsResponse , setQuestionsResponse} = useAiQuestions()
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },   
   });
-
+  console.log({questionsResponse})
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { tolerance: 5, delay: 380 },
   });
@@ -178,6 +178,9 @@ export default function FormBuilder({ form }: { form: Form }) {
 
     setSelectedElement(null)
     setIsReady(true);
+
+   
+
   }, [form, setElements, isReady ,setSelectedElement]);
 
   const sensors = useSensors(mouseSensor, touchSensor);

@@ -23,6 +23,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 export default function Home() {
+
   return (
     <div className="container  px-4 md:px-0  mx-auto pt-4">
       <Suspense fallback={<SatesCards loading={true} />}>
@@ -182,7 +183,7 @@ function FormCard({ form }: { form: Form }) {
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent>{form.description || "No description"}</CardContent>
+      <CardContent className="truncate">{form.description || "No description"}</CardContent>
           <CardFooter className="flex items-center justify-between text-muted-foreground text-sm">
           {form.published && (
             <Button className="" >
