@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable prefer-const */
+import React, { useEffect, useRef } from "react";
 import DesignerSideBar from "./PropertiesFormSidebar";
 import { useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
@@ -11,15 +12,20 @@ import {
 } from "./FormElements";
 import { Button } from "../ui/button";
 import { BiTrash } from "react-icons/bi";
+import { GenerateQuestions } from "../hooks/GenerateQustions";
+import useAiQuestions from "../hooks/useAIQustions";
 export default function Designer() {
   const { elements, addElement ,removeElement, selectedElement , setSelectedElement } = useDesigner();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const {setSuggestionsQuestion} = useAiQuestions()
   const drapable = useDroppable({
     id: "designer-drop-area",
     data: {
       isDesignerDropArea: true,
     },
   });
-
+ 
   useDndMonitor({
     onDragEnd: function (event) {
       const { active, over } = event;
@@ -91,6 +97,40 @@ export default function Designer() {
     },
   });
 
+  useEffect(() => {
+    if (elements.length > 1) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(async () => {
+        console.log("inside timeout");
+
+        try {
+          const suggestedQuestion = await GenerateQuestions(
+            `Return only one question that can be used for a form that have these questions and must be highly relevant:  ${JSON.stringify(elements)} `
+          );
+
+          console.log({ elements });
+
+          const parsed = Array.from(JSON.parse(suggestedQuestion)) as FormElementInstance[];
+          console.log("suggested");
+          console.log({ suggestedQuestion });
+          console.log({ suggestedQuestionParsed: parsed });
+
+          setSuggestionsQuestion(parsed);
+        } catch (error) {
+          console.error("Error generating suggestions:", error);
+        }
+      }, 5000);
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }
+  }, [elements])
   return (
     <div className="flex w-full h-full">
       <div className="p-4 w-full" 
@@ -128,7 +168,7 @@ export default function Designer() {
   );
 }
 
-function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
+export function DesignerElementWrapper({ element , classN }: { element: FormElementInstance , classN?:string }) {
   const [mouseIsOver, setMouseIsOver] = React.useState<boolean>(false);
   const { removeElement,selectedElement, setSelectedElement } = useDesigner();
   const topHalf = useDroppable({
@@ -173,7 +213,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
         console.log(selectedElement)
       }}
 
-      className="relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
+      className={cn(classN,"relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset")}
     >
       <div
         ref={topHalf.setNodeRef}

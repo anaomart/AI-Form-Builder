@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import PreviewDialogBtn from "./PreviewDialogBtn";
 import SaveFormBtn from "./SaveFormBtn";
 import PublishFormBtn from "./PublishFormBtn";
-import Designer from "./Designer";
+import Designer, { DesignerElementWrapper } from "./Designer";
 import {
   DndContext,
   MouseSensor,
@@ -26,7 +26,7 @@ import useAiQuestions from "../hooks/useAIQustions";
 
 export default function FormBuilder({ form }: { form: Form }) {
   const { setElements ,setSelectedElement, elements, addElement } = useDesigner();
-  const {questionsResponse , setQuestionsResponse} = useAiQuestions()
+  const {questionsResponse , setQuestionsResponse , suggestionsQuestion , setSuggestionsQuestion} = useAiQuestions()
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },   
@@ -166,6 +166,7 @@ export default function FormBuilder({ form }: { form: Form }) {
       }
     }
   ]
+  
 
   useEffect(() => {
     // if (!isReady) return;
@@ -173,7 +174,7 @@ export default function FormBuilder({ form }: { form: Form }) {
     const elements = JSON.parse(form.content);
     setElements(elements);
     questionsResponse.reverse().forEach(element => {
-      addElement(elements.length, element)
+      addElement(elements?.length, element)
     });
 
     setSelectedElement(null)
@@ -243,7 +244,14 @@ export default function FormBuilder({ form }: { form: Form }) {
   }
   return (
     <DndContext sensors={sensors}>
-      <main className="flex flex-col w-full">
+      <main className="flex flex-col  w-full">
+      {
+        suggestionsQuestion?.length > 0  && (<div className="absolute top-10 z-10 flex-col gap-2 items-center flex justify-center w-[85vw] mx-auto  ">
+          Suggestion Question
+        <DesignerElementWrapper classN="max-w-[920px] opacity-80 min-w-[320px] lg:min-w-[920px]" key={suggestionsQuestion[0].id} element={suggestionsQuestion[0]} />
+  
+        </div>)
+      }
         <nav className="flex justify-between border-b-2 p-4 gap-3 items-center">
           <h2 className="truncate font-medium">
             <span className="text-foreground mr-2">Form:</span>
@@ -261,7 +269,7 @@ export default function FormBuilder({ form }: { form: Form }) {
         </nav>
         <div
           className='w-full flex flex-grow items-center 
-    justify-center relative overflow-y-auto h-screen bg-accent bg-[url("/builderBG.svg")]'
+          justify-center relative overflow-y-auto h-screen bg-accent bg-[url("/builderBG.svg")]'
         >
           <Designer />
         </div>

@@ -9,7 +9,7 @@ const apiKey = process.env.GEMINI_API_KEY || "";
 export const GenerateQuestions= async (prompt:string)=>{
     
     const genAI = new GoogleGenerativeAI(apiKey);
-    
+    console.log({prompt})
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
       systemInstruction:

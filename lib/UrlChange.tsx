@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import useAiQuestions from '@/components/hooks/useAIQustions';
 
 const ResetOnRouteChange = () => {
-    const {setQuestionsResponse} = useAiQuestions()
+    const {setQuestionsResponse , setSuggestionsQuestion} = useAiQuestions()
     const pathname = usePathname();
 
   useEffect(() => {
@@ -13,8 +13,9 @@ const ResetOnRouteChange = () => {
     if (pathname === '/') {
         
         setQuestionsResponse([]);
+        setSuggestionsQuestion([]);
     }
-  }, [pathname, setQuestionsResponse]);
+  }, [pathname, setQuestionsResponse , setSuggestionsQuestion]);
 
   return null; // This component doesn't render anything
 };
