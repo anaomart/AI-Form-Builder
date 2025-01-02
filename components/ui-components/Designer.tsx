@@ -18,7 +18,7 @@ export default function Designer() {
   const { elements, addElement ,removeElement, selectedElement , setSelectedElement } = useDesigner();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const {setSuggestionsQuestion} = useAiQuestions()
+  const {setSuggestionsQuestion , suggestionsQuestion} = useAiQuestions()
   const drapable = useDroppable({
     id: "designer-drop-area",
     data: {
@@ -98,7 +98,7 @@ export default function Designer() {
   });
 
   useEffect(() => {
-    if (elements.length > 1) {
+    if (elements.length > 1 && suggestionsQuestion.length == 0) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -111,18 +111,14 @@ export default function Designer() {
             `Return only one question that can be used for a form that have these questions and must be highly relevant:  ${JSON.stringify(elements)} `
           );
 
-          console.log({ elements });
-
           const parsed = Array.from(JSON.parse(suggestedQuestion)) as FormElementInstance[];
-          console.log("suggested");
-          console.log({ suggestedQuestion });
-          console.log({ suggestedQuestionParsed: parsed });
+      
 
           setSuggestionsQuestion(parsed);
         } catch (error) {
           console.error("Error generating suggestions:", error);
         }
-      }, 5000);
+      }, 2500);
 
       return () => {
         if (timeoutRef.current) {

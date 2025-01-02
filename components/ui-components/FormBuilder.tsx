@@ -1,6 +1,6 @@
 "use client";
 import { Form } from "@prisma/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PreviewDialogBtn from "./PreviewDialogBtn";
 import SaveFormBtn from "./SaveFormBtn";
 import PublishFormBtn from "./PublishFormBtn";
@@ -21,155 +21,34 @@ import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import Confetti from "react-confetti";
-import { FormElementInstance } from "./FormElements";
+import { FormElementInstance, FormElements } from "./FormElements";
 import useAiQuestions from "../hooks/useAIQustions";
+import {AnimatePresence, motion} from "framer-motion";
+import { Minus, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function FormBuilder({ form }: { form: Form }) {
   const { setElements ,setSelectedElement, elements, addElement } = useDesigner();
+  const [suggestedQuestionState, setSuggestedQuestionState] = useState<"normal"|"added"|"removed">("normal")
   const {questionsResponse , setQuestionsResponse , suggestionsQuestion , setSuggestionsQuestion} = useAiQuestions()
   const [isReady, setIsReady] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },   
   });
+  let shareUrl = "";
+
   console.log({questionsResponse})
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { tolerance: 5, delay: 380 },
   });
-  const list : FormElementInstance[] = [
-    {
-      "id": "1",
-      "type": "TitleField",
-      "extraAttributes": {
-        "title": "Roof Assessment Form"
-      }
-    },
-    {
-      "id": "2",
-      "type": "SubTitleField",
-      "extraAttributes": {
-        "title": "Property Information"
-      }
-    },
-    {
-      "id": "3",
-      "type": "TextField",
-      "extraAttributes": {
-        "label": "Address",
-        "helperText": "Enter the full address of the property",
-        "required": true,
-        "placeHolder": "123 Main Street, Anytown"
-      }
-    },
-    {
-      "id": "4",
-      "type": "NumberField",
-      "extraAttributes": {
-        "label": "Age of Roof",
-        "helperText": "Approximately how old is your current roof?",
-        "required": true,
-        "placeHolder": "e.g., 10"
-      }
-    },
-      {
-      "id": "5",
-      "type": "SelectField",
-      "extraAttributes": {
-        "label": "Roof Type",
-        "helperText": "What type of roof do you have?",
-        "required": true,
-          "placeHolder": "Select Roof Type",
-        "options": ["Asphalt Shingles", "Tile", "Metal", "Slate", "Wood", "Other"]
-      }
-    },
-    {
-      "id": "6",
-      "type": "TextAreaField",
-      "extraAttributes": {
-        "label": "Describe any existing roof problems",
-        "helperText": "Leaks, missing shingles, etc.",
-        "required": false,
-        "placeHolder": "e.g., Leaks in the living room, missing shingles on the north side",
-        "rows": 3
-      }
-    },  {
-      "id": "7",
-      "type": "CheckboxField",
-      "extraAttributes": {
-        "label": "Have you noticed any leaks?",
-        "helperText": "",
-        "required": true
-      }
-    },
-    {
-      "id": "8",
-      "type": "CheckboxField",
-      "extraAttributes": {
-        "label": "Are there any missing or damaged shingles?",
-        "helperText": "",
-        "required": true
-      }
-    },
-   {
-      "id": "9",
-      "type": "CheckboxField",
-      "extraAttributes": {
-        "label": "Are you interested in energy-efficient roofing options?",
-        "helperText": "",
-        "required": false
-      }
-    },
-    {
-      "id": "10",
-      "type": "SubTitleField",
-      "extraAttributes": {
-        "label": "Contact Information"
-      }
-    },
-    {
-      "id": "11",
-      "type": "TextField",
-      "extraAttributes": {
-        "label": "Name",
-        "helperText": "Your full name",
-        "required": true,
-        "placeHolder": "e.g., John Doe"
-      }
-    },
-      {
-      "id": "12",
-      "type": "TextField",
-      "extraAttributes": {
-        "label": "Phone Number",
-        "helperText": "e.g., 555-123-4567",
-        "required": true,
-        "placeHolder": "e.g., 555-123-4567"
-      }
-    },
-    {
-      "id": "13",
-      "type": "TextField",
-      "extraAttributes": {
-        "label": "Email Address",
-        "helperText": "e.g., johndoe@email.com",
-        "required": true,
-        "placeHolder": "e.g., johndoe@email.com"
-      }
-    },
-    {
-      "id": "14",
-      "type": "DateField",
-      "extraAttributes": {
-        "label": "Best Time to Contact",
-        "helperText": "Select the best date and time to contact you",
-        "required": true,
-        "placeHolder": "Select Date and Time"
-      }
-    }
-  ]
+  const DesignerElement = FormElements[suggestionsQuestion[0]?.type || "TextField"].designerComponent 
   
-
+  
   useEffect(() => {
     // if (!isReady) return;
+    setIsClient(true)
+    shareUrl = `${window?.location.origin}/submit/${form.shareURL}`
     console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
@@ -183,9 +62,8 @@ export default function FormBuilder({ form }: { form: Form }) {
    
 
   }, [form, setElements, isReady ,setSelectedElement]);
-
+ 
   const sensors = useSensors(mouseSensor, touchSensor);
-  const shareUrl = `${window.location.origin}/submit/${form.shareURL}`;
   if (!isReady) {
     <FaSpinner className="animate-spin h-12 w-12" />;
   }
@@ -245,13 +123,64 @@ export default function FormBuilder({ form }: { form: Form }) {
   return (
     <DndContext sensors={sensors}>
       <main className="flex flex-col  w-full">
-      {
-        suggestionsQuestion?.length > 0  && (<div className="absolute top-10 z-10 flex-col gap-2 items-center flex justify-center w-[85vw] mx-auto  ">
-          Suggestion Question
-        <DesignerElementWrapper classN="max-w-[920px] opacity-80 min-w-[320px] lg:min-w-[920px]" key={suggestionsQuestion[0].id} element={suggestionsQuestion[0]} />
-  
-        </div>)
-      }
+<AnimatePresence> 
+      {suggestionsQuestion?.length > 0 && (
+
+        <motion.div
+          initial={{ y: -50, opacity: 0 }}
+          animate={{  y: 0, opacity: 1 }}
+
+          exit={{ y: suggestedQuestionState == "removed" ? -200 : 1000 , opacity: 0.2 , }}
+          transition={{ duration: 0.5 }}
+          className={cn(
+            "absolute top-10 z-10 flex flex-col gap-2 items-center w-[85vw] mx-auto",)}
+        >
+         
+          
+          <span className="bg-gradient-to-r from-primary via-red-600/30 to-black opacity-80 text-white px-4 py-2 rounded-md transition-opacity duration-300">
+            Suggestion Question
+          </span>
+          
+          <div className="flex relative z-50  w-full h-[120px] items-center rounded-md bg-accent px-4 py-2 max-w-[920px] min-w-[320px] lg:min-w-[920px]">
+            {DesignerElement && (
+              <DesignerElement elementInstance={suggestionsQuestion[0]} />
+            )}
+             <div className="flex z-50 absolute right-4  items-center gap-4 ">
+            <button
+            onClick={()=>{
+              addElement(elements?.length, suggestionsQuestion[0])
+              setSuggestedQuestionState('added')
+              setSuggestionsQuestion([])
+
+              setTimeout(()=>{
+                setSuggestedQuestionState('normal')
+
+              },1000)
+            }}
+          
+              className="flex items-center gap-2 cursor-pointer bg-green-700 hover:bg-green-700 text-white px-2 py-2 rounded-md transition-colors"
+            >
+              <Plus size={20} />
+              Add 
+            </button>
+            <button
+            onClick={()=>{
+              setSuggestedQuestionState('removed')
+              setTimeout(()=>{
+                setSuggestionsQuestion([])
+                setSuggestedQuestionState('normal')
+              },250)
+            }}
+              className="flex items-center gap-2 bg-primary cursor-pointer hover:bg-red-700 text-white px-2 py-2 rounded-md transition-colors"
+            >
+              <Minus size={20} />
+              Dismiss
+            </button>
+          </div>
+          </div>
+        </motion.div>
+      )}
+      </AnimatePresence>
         <nav className="flex justify-between border-b-2 p-4 gap-3 items-center">
           <h2 className="truncate font-medium">
             <span className="text-foreground mr-2">Form:</span>
