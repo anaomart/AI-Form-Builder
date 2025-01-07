@@ -29,7 +29,7 @@ import { FaWpforms } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 import { LuView } from "react-icons/lu";
 import { TbArrowBounce } from "react-icons/tb";
-import ExportButton from "./ExportButton";
+import ExportButton, { ToPDF } from "./ExportButton";
 
 export default async function FormDetails({
   params,
@@ -125,8 +125,6 @@ async function SubmissionsTable({ id }: { id: number }) {
 
   if (!form) throw new Error(`form not found `);
 
-
-  
   const FormElements = JSON.parse(form.content) as FormElementInstance[];
   type Row = {
     [key: string]: string;
@@ -170,23 +168,26 @@ async function SubmissionsTable({ id }: { id: number }) {
   return (
     <div className="text-2xl font-bold my-4">
       <div className="my-4 text-end">
-      <ExportButton  />
-
+        <div className="flex gap-2 justify-end">
+          <ExportButton />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader >
+          <TableHeader>
             <TableRow className="">
               {columns.map(({ id, label, required }) => (
-                <TableHead className="uppercase " key={id}>
-                  <span className="">
+                <TableHead className="uppercase  " key={id}>
+                  <span>
                     {" "}
-                    {label.length > 40 ? (
+                    {label.length > 25 ? (
                       <div>
-                       
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="text-lg py-2"> {label.slice(0, 25)}... </TooltipTrigger>
+                            <TooltipTrigger className=" mx-2 bg-primary p-2 text-nowrap rounded-md text-white">
+                              {" "}
+                              {label.slice(0, 25)}...{" "}
+                            </TooltipTrigger>
                             <TooltipContent className="bg-black text-base">
                               <p> {label}</p>
                             </TooltipContent>
@@ -194,24 +195,33 @@ async function SubmissionsTable({ id }: { id: number }) {
                         </TooltipProvider>
                       </div>
                     ) : (
-                      label
+                      <span className="text-nowrap mx-2  p-2 bg-primary rounded-md text-white">
+                        {label}
+                      </span>
                     )}
-                  
                   </span>
                 </TableHead>
               ))}
-              <TableHead className="text-muted-foreground text-right uppercase">
-                Submitted at
+              <TableHead className="text-muted-foreground text-center rounded-md text-white text-nowrap  w-fit uppercase">
+               <span className="flex justify-center items-center bg-blue-600 p-2 rounded-md">PDF</span>
+              </TableHead>
+              <TableHead className="text-muted-foreground rounded-md text-white text-nowrap text-right uppercase">
+              <span className="flex justify-center items-center bg-blue-600 p-2 rounded-md">Submitted at</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={index}>
-                {columns.map(({ id, type }) => (
-                  <RowCell  key={id} type={type} value={row[id]} />
+                {columns.map(({ id, type, label }) => (
+                  <RowCell key={id} type={type} value={row[id]} />
                 ))}
-
+                <ToPDF
+                  columns={columns}
+                  row={row}
+                  date={row.submittedAt}
+                  title={form.name}
+                />
                 <TableCell className="text-muted-foreground text-right">
                   {formatDistance(row.submittedAt, new Date(), {
                     addSuffix: true,
@@ -238,20 +248,25 @@ function RowCell({ type, value }: { type: ElementsType; value: string }) {
       const checkboxValue = value === "true";
       node = <Checkbox checked={checkboxValue} disabled />;
   }
-  return <TableCell className=" text-center py-2">{(node as string).length > 40 ? (
-    <div>
-     
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className=""> {(node as string).slice(0, 25)}... </TooltipTrigger>
-          <TooltipContent className="bg-black text-base">
-            <p> {node}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-  ) : (
-    <div>{node}</div>
-  )}
-</TableCell>;
+  return (
+    <TableCell className=" text-center py-2">
+      {(node as string).length > 40 ? (
+        <div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="">
+                {" "}
+                {(node as string).slice(0, 25)}...{" "}
+              </TooltipTrigger>
+              <TooltipContent className="bg-black text-base">
+                <p> {node}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ) : (
+        <div>{node}</div>
+      )}
+    </TableCell>
+  );
 }
