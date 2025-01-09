@@ -53,7 +53,7 @@ export default function FormBuilder({ form }: { form: Form }) {
     const elements = JSON.parse(form.content);
     setElements(elements);
     questionsResponse.forEach(element => {
-      addElement(0, element)
+      addElement(elements.length, element)
     });
 
     setSelectedElement(null)
