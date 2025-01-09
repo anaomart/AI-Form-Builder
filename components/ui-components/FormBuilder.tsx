@@ -52,7 +52,7 @@ export default function FormBuilder({ form }: { form: Form }) {
     console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
-    questionsResponse.reverse().forEach(element => {
+    questionsResponse.forEach(element => {
       addElement(0, element)
     });
 
