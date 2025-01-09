@@ -52,8 +52,8 @@ export default function FormBuilder({ form }: { form: Form }) {
     console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
-    questionsResponse.forEach(element => {
-      addElement(elements.length, element)
+    questionsResponse.forEach((element,index) => {
+      addElement(index, element)
     });
 
     setSelectedElement(null)
