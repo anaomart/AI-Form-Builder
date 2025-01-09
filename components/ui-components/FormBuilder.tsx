@@ -36,7 +36,8 @@ export default function FormBuilder({ form }: { form: Form }) {
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },   
   });
-  let shareUrl = "";
+  let    shareUrl = `${window?.location.origin}/submit/${form.shareURL}` || `https://ai-form-builder-one.vercel.app/submit/${form.shareURL}`
+  ;
 
   console.log({questionsResponse})
   const touchSensor = useSensor(TouchSensor, {

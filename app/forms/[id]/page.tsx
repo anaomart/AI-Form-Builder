@@ -184,7 +184,7 @@ async function SubmissionsTable({ id }: { id: number }) {
                       <div>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className=" mx-2 bg-primary p-2 text-nowrap rounded-md text-white">
+                            <TooltipTrigger className=" mx-2 bg-primary p-1 text-nowrap rounded-md text-white">
                               {" "}
                               {label.slice(0, 25)}...{" "}
                             </TooltipTrigger>
@@ -195,7 +195,7 @@ async function SubmissionsTable({ id }: { id: number }) {
                         </TooltipProvider>
                       </div>
                     ) : (
-                      <span className="text-nowrap mx-2  p-2 bg-primary rounded-md text-white">
+                      <span className="text-nowrap mx-2  p-1 bg-primary rounded-md text-white">
                         {label}
                       </span>
                     )}
@@ -203,7 +203,7 @@ async function SubmissionsTable({ id }: { id: number }) {
                 </TableHead>
               ))}
               <TableHead className="text-muted-foreground text-center rounded-md text-white text-nowrap  w-fit uppercase">
-               <span className="flex justify-center items-center bg-blue-600 p-2 rounded-md">PDF</span>
+               <span className="flex justify-center items-center bg-blue-600 p-2 rounded-md">PDF Version</span>
               </TableHead>
               <TableHead className="text-muted-foreground rounded-md text-white text-nowrap text-right uppercase">
               <span className="flex justify-center items-center bg-blue-600 p-2 rounded-md">Submitted at</span>
