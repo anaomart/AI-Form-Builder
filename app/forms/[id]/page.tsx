@@ -216,12 +216,16 @@ async function SubmissionsTable({ id }: { id: number }) {
                 {columns.map(({ id, type, label }) => (
                   <RowCell key={id} type={type} value={row[id]} />
                 ))}
+                <TableCell className="text-muted-foreground text-right">
+
                 <ToPDF
                   columns={columns}
                   row={row}
                   date={row.submittedAt}
                   title={form.name}
                 />
+                </TableCell>
+              
                 <TableCell className="text-muted-foreground text-right">
                   {formatDistance(row.submittedAt, new Date(), {
                     addSuffix: true,
@@ -250,13 +254,13 @@ function RowCell({ type, value }: { type: ElementsType; value: string }) {
   }
   return (
     <TableCell className=" text-center py-2">
-      {(node as string).length > 40 ? (
+      {typeof node === "string" && node.length > 40 ? (
         <div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="">
                 {" "}
-                {(node as string).slice(0, 25)}...{" "}
+                {node .slice(0, 25)}...{" "}
               </TooltipTrigger>
               <TooltipContent className="bg-black text-base">
                 <p> {node}</p>

@@ -5,13 +5,13 @@ import useDesigner from '../hooks/useDesigner'
 import { UpdateFormContent } from '@/actions/forms'
 import { toast } from '@/hooks/use-toast'
 import { FaSpinner } from 'react-icons/fa'
+import { SaveForm } from '@/lib/saveForm'
 export default function SaveFormBtn({id}:{id:number}) {
   const {elements} = useDesigner()
   const [loading, startTransition] = useTransition()
-  const updateFormContact = async ()=>{
+   const updateFormContact = async ()=>{
     try{
-     const JsonElements = JSON.stringify(elements)
-     await UpdateFormContent(id , JsonElements)
+      SaveForm(elements, id)
      toast({
       title:'Success!',
       description: 'Form has been saved successfully',

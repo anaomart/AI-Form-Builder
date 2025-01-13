@@ -9,9 +9,9 @@ import {
   FormElementInstance,
 } from "@/components/ui-components/FormElements";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon, SheetIcon } from "lucide-react";
+import {  SheetIcon } from "lucide-react";
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { FaFileDownload } from "react-icons/fa";
 const ExportButton = () => {
   const router = useParams();
 
@@ -193,9 +193,10 @@ export const ToPDF = ({
       onClick={generateAndDownloadPdf}
       variant="default"
       color="primary"
-      className="bg-transparent w-fit text-sm"
+      className="bg-transparent w-fit bg-primary text-sm"
     >
-      Export to PDF
+     Export to PDF
+    <FaFileDownload/> 
     </Button>
   );
 };
