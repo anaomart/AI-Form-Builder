@@ -168,11 +168,11 @@ export default function FormBuilder({ form }: { form: Form }) {
               }}
               transition={{ duration: 0.5 }}
               className={cn(
-                "absolute top-10 z-10 flex flex-col gap-2 items-center w-[85vw] mx-auto"
+                "absolute top-5   z-10 flex flex-col gap-2 items-center w-[78vw] 2xl:w-[85vw] mx-auto"
               )}
             >
-              <span className="bg-gradient-to-r from-primary via-red-600/30 to-black opacity-80 text-white px-4 py-2 rounded-md transition-opacity duration-300">
-                Suggestion Question
+              <span className="bg-primary text-white px-4 py-2 rounded-md transition-opacity duration-300">
+                Suggested Question
               </span>
 
               <div className="flex relative z-50  w-full h-[120px] items-center rounded-md bg-accent px-4 py-2 max-w-[920px] min-w-[320px] lg:min-w-[920px]">

@@ -6,7 +6,10 @@ import { FaIcons, FaSpinner } from "react-icons/fa";
 import { toast } from "@/hooks/use-toast";
 import { PublishFormFC } from "@/actions/forms";
 import { useRouter } from "next/navigation";
+import { SaveForm } from "@/lib/saveForm";
+import useDesigner from "../hooks/useDesigner";
 export default function PublishFormBtn({id}:{id:number}) {
+    const {elements} = useDesigner()
     const [loading, startTransition] = useTransition();
     const  router= useRouter();
 
@@ -48,7 +51,15 @@ export default function PublishFormBtn({id}:{id:number}) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction disabled={loading} onClick={(e)=>{
                 e.preventDefault();
-                startTransition(() => PublishForm());
+                startTransition(async() =>
+                {
+                    await SaveForm(elements,id).then(()=>{
+
+                        PublishForm()
+                    })
+                }
+                
+                );
             }}>Proceed 
 
                 {loading && <FaSpinner className='animate-spin' />}
