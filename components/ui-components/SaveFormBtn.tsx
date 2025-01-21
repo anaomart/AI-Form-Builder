@@ -11,7 +11,9 @@ export default function SaveFormBtn({id}:{id:number}) {
   const [loading, startTransition] = useTransition()
    const updateFormContact = async ()=>{
     try{
-      SaveForm(elements, id)
+      console.log({elements})
+      console.log({id})
+     await SaveForm(elements, id)
      toast({
       title:'Success!',
       description: 'Form has been saved successfully',

@@ -83,7 +83,7 @@ export default function FormBuilder({ form }: { form: Form }) {
         setElements(questionsResponse);
         SaveForm(questionsResponse,  form.id );
       }
-      SetQuestions();
+     if(elements.length === 0) SetQuestions();
     }
 
     setSelectedElement(null);
