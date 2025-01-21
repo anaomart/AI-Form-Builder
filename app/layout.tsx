@@ -10,6 +10,7 @@ import NextTopLoader from "nextjs-toploader";
 import AIContextProvider, { AIContext } from "@/components/context/AiContext";
 import ResetOnRouteChange from "@/lib/UrlChange";
 import Head from "next/head";
+import Script from "next/script";
 export const metadata: Metadata = {
   title: "AI Form Builder",
   description: "AI Form Builder By Omar Ashraf",
@@ -21,18 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" suppressHydrationWarning>
         <body>
           <Head>
-          <script
-              type="text/javascript"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  (function(c,l,a,r,i,t,y){
-                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                  })(window, document, "clarity", "script", "pxehva6vi1");
-                `,
-              }}
-            />
+            <title>AI Form Builder</title> 
           </Head>
           <main>
 
@@ -59,6 +49,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </ThemeProvider>
          </DesignerContextProvider>
             </main>
+
+            <Script
+              id="clarity-script"
+              type="text/javascript"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(c,l,a,r,i,t,y){
+                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  })(window, document, "clarity", "script", "pxehva6vi1");
+                `,
+              }}
+            />
         </body>
       </html>
          </AIContextProvider>
