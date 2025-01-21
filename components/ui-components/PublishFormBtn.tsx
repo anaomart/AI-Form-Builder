@@ -15,6 +15,7 @@ export default function PublishFormBtn({id}:{id:number}) {
 
     async function PublishForm(){
         try {
+            await SaveForm(elements,id)
             await PublishFormFC(id);
             toast({
                 title: "Form Published Successfully",

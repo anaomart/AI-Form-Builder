@@ -27,7 +27,7 @@ export default function PreviewDialogBtn() {
         </p>
     </div>  
 
-    <div className=' bg-accent min-h-screen w-full flex flex-col flex-grow items-center justify-center p-4 bg-[url("/builderBG.svg")]  '>
+    <div className=' bg-accent max-h-[90vh] w-full flex flex-col flex-grow items-center justify-center p-4 bg-[url("/builderBG.svg")]  '>
       <div className='max-w-[620px] ring-primary ring-1 flex flex-col gap-4 flex-grow bg-background h-full w-full rounded-2xl p-8 overflow-y-auto'>
         {
           elements.map((item, index) => {

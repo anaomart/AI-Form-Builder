@@ -46,7 +46,7 @@ export default function FormBuilder({ form }: { form: Form }) {
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 15 },
   });
-  let shareUrl =
+  const shareUrl =
     `${window?.location.origin}/submit/${form.shareURL}` ||
     `https://ai-form-builder-one.vercel.app/submit/${form.shareURL}`;
   console.log({ questionsResponse });
@@ -75,7 +75,6 @@ export default function FormBuilder({ form }: { form: Form }) {
   useEffect(() => {
     // if (!isReady) return;
     setIsClient(true);
-    shareUrl = `${window?.location.origin}/submit/${form.shareURL}`;
     console.log({ form });
     const elements = JSON.parse(form.content);
     setElements(elements);
