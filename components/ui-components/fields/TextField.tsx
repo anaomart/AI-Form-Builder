@@ -119,12 +119,11 @@ function FormComponent({
       </Label>
       <Input
         value={value}
+        
         className={error ? "border-red-500" : ""}
         placeholder={placeHolder}
         onChange={(e) => {
           setValue(e.target.value);
-        }}
-        onBlur={(e) => {
           if (!submitValue) return;
           submitValue(element.id, e.target.value);
 
@@ -132,6 +131,7 @@ function FormComponent({
           setError(!valid);
           if (!valid) return;
         }}
+        
       />
       {helperText && (
         <span
